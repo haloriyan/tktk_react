@@ -1,0 +1,10 @@
+.Header {
+    width: 35%;
+}
+
+@media (max-width: 480px) {
+    .Header {
+        width: 100%;
+        padding: 0px 20px;
+    }
+}

@@ -1,0 +1,9 @@
+.line {
+    background-color: #3498db;
+    position: relative;
+}
+.mask {
+    background-color: #fff;
+    border-radius: 999px;
+    position: absolute;
+}

@@ -1,0 +1,23 @@
+.Section {
+    padding: 40px;
+}
+.FeatureBoxWrapper {
+    flex-direction: row;
+    align-items: center;
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+.FeatureBox {
+    background-color: #fff;
+    padding: 25px;
+    border-radius: 12px;
+    flex-basis: 28%;
+    max-width: 33.333% - 20px;
+    flex-grow: 1;
+    border-bottom: 8px solid var(--primaryTransparent);
+    flex-direction: row;
+    display: flex;
+    align-items: center;
+    color: var(--text);
+}

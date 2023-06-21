@@ -1,0 +1,14 @@
+.event_card {
+    border: 1px solid #ddd;
+    border-radius: 7px;
+    display: flex;
+    flex-direction: column;
+}
+.event_cover {
+    width: 100%;
+    aspect-ratio: 5 /2;
+    background-size: cover;
+    background-color: #ddd;
+    border-top-left-radius: 7px;
+    border-top-right-radius: 7px;
+}

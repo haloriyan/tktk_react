@@ -1,0 +1,7 @@
+.area {
+    position: fixed;
+    top: 65px;left: 0px;bottom: 0px;
+    width: 20%;
+    border-right: 1px solid #ddd;
+    padding: 20px;
+}

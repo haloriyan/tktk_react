@@ -1,0 +1,47 @@
+.ticket {
+    background: url(../../public/images/TicketBG.png) no-repeat center center;
+    background-size: cover;
+    aspect-ratio: 300 / 131;
+    display: flex;
+    flex-direction: column;
+    flex-basis: 33.3%;
+    padding: 20px 40px 15px 40px;
+}
+.ticket_info {
+    height: 95px;
+}
+.ticket_name {
+    font-weight: bold;
+    font-size: 18px;
+}
+.ticket_description {
+    font-size: 12px;
+    color: #888;
+    margin-top: 5px;
+}
+.ticket_bottom {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    font-size: 11px;
+    color: var(--primary);
+}
+.ticket_bottom div {
+    flex-grow: 1;
+}
+.ticket_price {
+    font-size: 13px;
+    font-weight: bold;
+}
+
+@media (max-width: 480px) {
+    .ticket {
+        flex-basis: 100%;
+    }
+    .ticket_info {
+        height: 80px;
+    }
+    .ticket_name { font-size: 15px; }
+    .ticket_description,
+    .ticket_bottom div { font-size: 10px; }
+}

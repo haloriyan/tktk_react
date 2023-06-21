@@ -1,0 +1,19 @@
+.Circle {
+    position: absolute;
+    margin-top: -10px;
+    width: 40px;
+    height: 40px;
+    border-radius: 999px;
+    background-color: #fff;
+}
+.CircleLeft {
+    left: -11px;
+}
+.CircleRight {
+    right: -11px;
+    transform: rotate(180deg);
+}
+.Circle img {
+    width: 100%;
+    aspect-ratio: 1;
+}

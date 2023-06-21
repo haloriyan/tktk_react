@@ -1,0 +1,9 @@
+.StreamNavigation {
+    bottom: 2.5%;left: 5%;right: 5%;
+    height: 75px;
+    z-index: 2;
+}
+.StreamNavigation li {
+    list-style: none;
+    text-align: center;
+}

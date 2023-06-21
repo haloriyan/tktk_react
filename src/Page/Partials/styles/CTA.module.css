@@ -1,0 +1,7 @@
+.CTA {
+    background: linear-gradient(
+        var(--primary) 10%,
+        var(--primaryDark) 90%
+    );
+    color: #fff;
+}

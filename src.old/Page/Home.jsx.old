@@ -1,0 +1,211 @@
+import axios from "axios";
+import moment from "moment";
+import React, { useEffect, useState } from "react";
+import { BiCalendar, BiMap, BiMoney, BiSearch } from "react-icons/bi";
+import CardLoader from "../components/CardLoader";
+import Currency from "../components/Currency";
+import Footer from "../components/Footer";
+import Header from "../components/Header";
+import Squarize from "../components/Squarize";
+import config from "../config";
+import Category from "./Partials/Category";
+import Topic from "./Partials/Topic";
+import CitySection from "./Partials/CitySection";
+import SliderBanner from "../components/SliderBanner";
+import TopicSection from "./Partials/TopicSection";
+import theStyle from "../styles/Home.module.css";
+import { HiOutlineTicket } from "react-icons/hi";
+import Waves from "../components/Waves";
+
+const Home = () => {
+    const [user, setUser] = useState(null);
+    const [features, setFeatures] = useState(null);
+    const [cities, setCities] = useState([]);
+    const [banners, setBanners] = useState([]);
+    const [organizers, setOrganizers] = useState([]);
+    const [isLoading, setLoading] = useState(true);
+
+    useEffect(() => {
+        if (user === null) {
+            setUser(JSON.parse(window.localStorage.getItem('user')));
+        }
+        Squarize();
+    });
+
+    useEffect(() => {
+        if (isLoading) {
+            setLoading(false);
+            axios.post(`${config.baseUrl}/api/page/index`)
+            .then(response => {
+                let res = response.data;
+                setFeatures(res.features);
+                setCities(res.cities);
+                setBanners(res.banners);
+                setOrganizers(res.organizers);
+            })
+        }
+    })
+
+    return (
+        <>
+            <Header user={user} />
+            <div className="content page">
+                <section id="banners" className={`${theStyle.BannerSection} p-4 flex gap-20 row item-center overflow-x`}>
+                    {
+                        banners.map((bann, b) => (
+                            <a href="#" key={b} style={{width: 800,minWidth: 800}}>
+                                <img 
+                                    src={`${config.baseUrl}/storage/banner_images/${bann.image}`} alt={`Slide ${b}`} 
+                                    className="ratio-5-2 rounded w-100 cover"
+                                />
+                            </a>
+                        ))
+                    }
+                </section>
+
+                <section id="featured" className={`${theStyle.FeaturedSection} bg-grey`}>
+                    {
+                        features === null ?
+                            <CardLoader />
+                        :
+                        <div className={`${theStyle.FeaturedInnerSection}`}>
+                            <div className="h-10"></div>
+                            <h3 className="text size-24 bold m-4">Rekomendasi Event</h3>
+                            <div className={`${theStyle.FeaturedWrapper} flex row gap-10`}>
+                                {
+                                    features.map((feature, f) => {
+                                        let organizer = feature.organizer;
+                                        return (
+                                            <a href={`/event/${feature.slug}`} key={f} className={`${theStyle.FeaturedItem} flex column bg-white bordered rounded ${f === 0 ? 'ml-4' : ''} ${f === features.length - 1 ? 'mr-4' : ''}`}>
+                                                <img 
+                                                    src={`${config.baseUrl}/storage/event/${feature.id}/${feature.cover}`}
+                                                    className="w-100 cover rounded-top-left rounded-top-right"
+                                                    style={{aspectRatio: 5/2}} 
+                                                />
+                                                <div className="p-2">
+                                                    <div className="text bold">{feature.name}</div>
+                                                    <div className="mt-2 flex row item-center">
+                                                        <BiCalendar color="#888" />
+                                                        <div className="ml-1 text muted small">{moment(feature.start_date).format('DD MMM Y')}</div>
+                                                    </div>
+                                                    <div className="mt-1 flex row item-center">
+                                                        <BiMoney color="#888" />
+                                                        <div className="ml-1 text muted small">{Currency(feature.tickets[0].price).encode()}</div>
+                                                    </div>
+                                                    <div className="mt-1 flex row item-center">
+                                                        <BiMap color="#888" />
+                                                        <div className="ml-1 text muted small">Surabaya, Jawa Timur</div>
+                                                    </div>
+
+                                                    <a href={`/organizer/${organizer.username}`} className="text black">
+                                                        <div className="mt-3 pt-1 border top flex row item-center">
+                                                            <img 
+                                                                src={organizer.icon === null ? '/images/DefaultLogo.png' : `${config.baseUrl}/storage/organizer_icons/${organizer.icon}`} alt={organizer.name} 
+                                                                className="bg-grey rounded-max h-40 ratio-1-1"
+                                                            />
+                                                            <div className="ml-1 text small">{organizer.name}</div>
+                                                        </div>
+                                                    </a>
+                                                </div>
+                                            </a>
+                                        )
+                                    })
+                                }
+                            </div>
+                            <div className="h-60"></div>
+                        </div>
+                    }
+                </section>
+                <div className="bg-grey">
+                    <section id="categories" className="p-4 bordered bg-white" style={{
+                        borderTopLeftRadius: 15,
+                        borderTopRightRadius: 15,
+                    }}>
+                        <h3 className="text center size-24">Ikuti Apa yang Kamu Mau</h3>
+                        <div className="flex row item-center justify-center">
+                            <div className="w-10 bg-primary h-5 rounded-max"></div>
+                        </div>
+                        <div className="h-50"></div>
+                        <Category />
+                        <Topic />
+                    </section>
+                </div>
+
+                <section id="city" className="p-4">
+                    <CitySection cities={cities} />
+                </section>
+
+                <section id="topic" className="p-4">
+                    <TopicSection />
+                </section>
+
+                <section id="services" className="p-4">
+                    <div className="text size-24 center">Layanan & Fasilitas</div>
+                    <div className="mt-1 text center">
+                        Menyediakan layanan dan fasilitas untuk berbagai kebutuhan event management yang diselenggarakan virtual, hybrid, dan offline
+                    </div>
+
+                    <div className="flex row gap-20 mt-4 justify-center">
+                        <div className="flex column item-center justify-center basis-5 grow-1 bg-primary h-200 squarize use-height rounded-more">
+                            <HiOutlineTicket size={80} />
+                            <div className="mt-2 text center">
+                                Ticketing System
+                            </div>
+                        </div>
+                        <div className="flex column item-center justify-center basis-5 grow-1 bg-primary h-200 squarize use-height rounded-more">
+                            <HiOutlineTicket size={80} />
+                            <div className="mt-2 text center">
+                                Virtual Event
+                            </div>
+                        </div>
+                        <div className="flex column item-center justify-center basis-5 grow-1 bg-primary h-200 squarize use-height rounded-more">
+                            <HiOutlineTicket size={80} />
+                            <div className="mt-2 text center">
+                                Hybrid Event
+                            </div>
+                        </div>
+                        <div className="flex column item-center justify-center basis-5 grow-1 bg-primary h-200 squarize use-height rounded-more">
+                            <BiCalendar size={80} />
+                            <div className="mt-2 text center">
+                                Offline Event
+                            </div>
+                        </div>
+                        <div className="flex column item-center justify-center basis-5 grow-1 bg-primary h-200 squarize use-height rounded-more">
+                            <HiOutlineTicket size={80} />
+                            <div className="mt-2 text center">
+                                Broadcasting System
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="organizers">
+                    <h3 className="text normal size-24 ml-4">Organizer Favorit</h3>
+                    <div className="flex row gap-10 overflow-x">
+                        {
+                            organizers.map((org, o) => (
+                                <a href={`/o/${org.username}`} className={`text black flex column item-center ${o === 0 ? 'ml-4' : ''} ${o === features.length - 1 ? 'mr-4' : ''}`} style={{minWidth: 125}} key={o}>
+                                    <img 
+                                        src={
+                                            org.icon === null ?
+                                                '/images/default_organizer_logo.png'
+                                            :
+                                                `${config.baseUrl}/storage/organizer_icons/${org.icon}`
+                                        } 
+                                        alt={org.name} 
+                                        className="h-80 rounded-max squarize use-height bg-grey"
+                                    />
+                                    <div className="text mt-1">{org.name}</div>
+                                </a>
+                            ))
+                        }
+                    </div>
+                </section>
+
+                <Footer />
+            </div>
+        </>
+    )
+}
+
+export default Home;

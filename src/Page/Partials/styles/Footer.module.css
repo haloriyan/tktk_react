@@ -1,0 +1,42 @@
+.Footer {
+    padding: 50px 100px;
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+    background-color: #fff;
+}
+.Brand {
+    margin-right: 50px;
+    width: 40%;
+}
+.BrandImage { height: 60px; }
+.Section {
+    display: flex;
+    flex-direction: column;
+    flex-basis: 31%;
+    flex-grow: 1;
+}
+.LinkItem {
+    list-style: none;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    height: 35px;
+    font-size: 14px;
+}
+
+@media (max-width: 480px) {
+    .Footer {
+        flex-direction: column;
+        padding: 15px 25px;
+    }
+    .Brand {
+        align-items: center;
+        width: 100%;
+        align-content: center;
+    }
+    .BrandImage { height: 40px; }
+    .Section {
+        margin-top: 25px;
+    }
+}
