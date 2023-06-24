@@ -28,7 +28,8 @@
 @media (max-width: 480px) {
     .Footer {
         flex-direction: column;
-        padding: 15px 25px;
+        padding: 25px;
+        margin-top: 40px;
     }
     .Brand {
         align-items: center;

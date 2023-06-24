@@ -27,28 +27,55 @@
     background-color: #fff;
     border-bottom: 6px solid var(--primaryTransparent);
     display: none;
+    position: fixed;
 }
 .MenuItem:hover .SubMenuWrapper,
 .SubMenuItem:hover .SubMenuWrapper {
     display: block;
 }
+.MenuWrapper { margin-left: 40px; }
+
+.MobileOnly { display: none; }
+.DesktopOnly { display: flex; }
+.Logo {
+    display: flex;
+    flex-grow: 0;
+}
+
 @media (max-width: 480px) {
     .Header {
         padding: 0px 20px;
     }
+    .Logo {
+        flex-grow: 1;
+    }
+    .MobileOnly { display: flex; }
+    .DesktopOnly { display: none; }
     .MenuWrapper {
+        transition: 0.4s;
         position: fixed;
-        top: 70px;left: 0px;right: 0px;bottom: 0px;
+        top: 70px;left: 100%;bottom: 0px;
+        width: 100%;
         flex-direction: column;
         background-color: #fff;
-        margin: 0px;
+        margin-left: 0px;
+        padding-top: 40px;
+    }
+    .MenuWrapper.Active {
+        left: 0%;
     }
     .MenuItem,.SubMenuItem {
-        height: 50px;
-        width: 70%;
+        height: auto;
+        padding: 15px 20px;
+        width: 80%;
+    }
+    .MenuItem:hover {
+        height: auto;
     }
     .SubMenuWrapper {
         left: 0px;right: 0px;
         padding: 20px;
+        position: static;
+        width: 100%;
     }
 }

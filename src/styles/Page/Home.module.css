@@ -21,3 +21,43 @@
     align-items: center;
     color: var(--text);
 }
+
+.TopSectionInfo,.TopIllustration { width: 50%; }
+.AboutLeft { width: 40%; }
+.AboutRight { width: 60%; }
+
+@media (max-width: 480px) {
+    .Section {
+        flex-direction: column !important;
+    }
+    .TopSection {
+        flex-direction: column-reverse !important;
+        padding: 40px;
+        height: auto;
+    }
+    .TopSectionInfo,.TopIllustration {
+        width: 100%;
+    }
+    .TopTitle,.AboutTitle {
+        font-size: 28px !important;
+    }
+    .TopDescription,.AboutDescription {
+        font-size: 16px !important;
+        line-height: 28px;
+    }
+    .AboutSection {
+        flex-direction: column !important;
+        margin-top: 20px !important;
+    }
+    .AboutLeft,.AboutRight {
+        width: 100% !important;
+    }
+    .StepWrapper {
+        flex-direction: column !important;
+    }
+    .StepItem {
+        width: 100% !important;
+        max-width: 100% !important;
+        padding: 40px !important;
+    }
+}

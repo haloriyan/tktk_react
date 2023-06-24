@@ -1,15 +1,22 @@
-import React from "react";
+import React, { useState } from "react";
 import styles from "./styles/Header.module.css";
 import { MdExpandMore } from "react-icons/md";
 import { BiBox, BiHome, BiMessage, BiPhoneCall, BiStats } from "react-icons/bi";
+import { MdMenu } from "react-icons/md";
+import MenuBar from "./MenuBar";
 
 const Header = ({title, parent = 'home'}) => {
+    const [active, setActive] = useState(false);
+
     return (
         <div className={`fixed top-0 left-0 right-0 h-70 border bottom grey flex row item-center ${styles.Header}`}>
-            <a href="/halo">
+            <a href="/halo" className={styles.Logo}>
                 <img src="/images/logo.png" alt="Logo Takotoko Header" className="h-40" />
             </a>
-            <nav className={`flex grow-1 item-center ml-4 ${styles.MenuWrapper}`}>
+            <div className={`${styles.MobileOnly} `}>
+                <MenuBar active={active} setActive={setActive} />
+            </div>
+            <nav className={`flex grow-1 item-center ${styles.MenuWrapper} ${active ? styles.Active : ''}`}>
                 <a href="/" className={`${styles.MenuItem} text ${parent === 'home' ? 'primary bold border bottom-2' : 'black'}`}>
                     <li className={styles.MenuText}>Home</li>
                 </a>
@@ -19,7 +26,7 @@ const Header = ({title, parent = 'home'}) => {
                 <a href="#" className={`${styles.MenuItem} text ${parent === 'solution' ? 'primary bold border bottom-2' : 'black'}`}>
                     <li className={styles.MenuText}>Solusi
                         <MdExpandMore className={styles.MenuMore} />
-                        <ul className={`${styles.SubMenuWrapper} fixed m-0 p-0`}>
+                        <ul className={`${styles.SubMenuWrapper} m-0 p-0`}>
                             <a href="/solution/advanced-analytic" className={`${styles.SubMenuItem} text black`}>
                                 <div className="h-50 bg-blue transparent rounded-max ratio-1-1 centerize mr-2">
                                     <BiStats size={22} />
@@ -56,6 +63,10 @@ const Header = ({title, parent = 'home'}) => {
                                     <div className="text small muted">Engage dan Follow Up Pelanggan</div>
                                 </div>
                             </a>
+
+                            <button className={`mt-2 primary rounded small ${styles.MobileOnly}`}>
+                                Download App
+                            </button>
                         </ul>
                     </li>
                 </a>
@@ -63,7 +74,7 @@ const Header = ({title, parent = 'home'}) => {
                     <li className={styles.MenuText}>Harga</li>
                 </a>
             </nav>
-            <button className="primary rounded small">
+            <button className={`primary rounded small ${styles.DesktopOnly}`}>
                 Download App
             </button>
         </div>

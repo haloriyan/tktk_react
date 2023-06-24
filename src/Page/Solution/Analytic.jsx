@@ -1,23 +1,27 @@
-import React from "react";
+import React, { useEffect } from "react";
 import styles from "../../styles/Page/CustomerRelation.module.css";
 import Header from "../Partials/Header";
 import Footer from "../Partials/Footer";
+import config from "../../config";
 
 const AnalyticSolution =() => {
+    useEffect(() => {
+        document.title = `Advanced Analytic - ${config.app_name}`
+    }, [])
     return (
         <>
             <Header parent="solution" />
             <div className="absolute left-0 right-0" style={{top: 60}}>
-                <div className="bg-white flex row item-center h-650 pl-4 pr-4">
-                    <div className="flex column grow-1 w-50">
+                <div className={`bg-white flex row item-center h-650 pl-4 pr-4 ${styles.TopSection}`}>
+                    <div className={`flex column grow-1 w-50 ${styles.TopSectionInfo}`}>
                         <div className="text small primary">Solusi &gt; Advanced Analytic</div>
-                        <h2 className="text size-46 mt-1">Cari Tahu Apa yang Customer Inginkan</h2>
+                        <h2 className={`text size-46 mt-1 ${styles.TopSectionTitle}`}>Cari Tahu Apa yang Customer Inginkan</h2>
 
                         <div className="flex ro">
                             <button className="primary">Coba Sekarang</button>
                         </div>
                     </div>
-                    <img src="/images/customer-relation.png" alt="Customer Relation" className="w-50" />
+                    <img src="/images/customer-relation.png" alt="Customer Relation" className={styles.TopIllustration} />
                 </div>
 
                 <div className={`flex ${styles.Section}`}>

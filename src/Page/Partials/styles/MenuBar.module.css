@@ -1,0 +1,30 @@
+.Bar {
+    width: 40px;
+    height: 2px;
+    background-color: #777;
+}
+.BarOne {
+    /* background-color: red; */
+}
+.BarTwo {
+    margin: 8px 0px;
+    width: 30px;
+}
+.BarThree {
+    width: 20px;
+}
+
+.BarOne.Active {
+    transform: rotateZ(-45deg);
+    position: relative;
+    top: 5px;
+}
+.BarTwo.Active {
+    width: 40px;
+    transform: rotateZ(45deg);
+    position: relative;
+    bottom: 3px;
+}
+.BarThree.Active {
+    display: none;
+}
