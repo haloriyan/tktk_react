@@ -12,6 +12,7 @@ import PaymentGatewaySolution from "./Solution/PaymentGateway";
 import ArtificialCareSolution from "./Solution/ArtificialCare";
 import ShippingSolution from "./Solution/Shipping";
 import Terms from "./Terms";
+import ProductUsecase from "./Usecase/Product";
 
 const PageRouter = () => {
     return (
@@ -28,7 +29,7 @@ const PageRouter = () => {
             <Route path="/solution/artificial-care" Component={ArtificialCareSolution} />
             <Route path="/solution/shipping" Component={ShippingSolution} />
 
-            <Route path="/usecase/product" Component={PhotographerUsecase} />
+            <Route path="/usecase/product" Component={ProductUsecase} />
             <Route path="/usecase/service" Component={PhotographerUsecase} />
             <Route path="/usecase/photographer" Component={PhotographerUsecase} />
             <Route path="/usecase/repair-service" Component={RepairUsecase} />

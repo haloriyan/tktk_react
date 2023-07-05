@@ -2,7 +2,7 @@ const config = {
     // baseUrl: 'http://172.20.10.3:8000',
     // baseUrl: 'https://app.dailyhotels.id',
     app_name: "Takotoko",
-    baseUrl: 'http://172.20.10.3:8000',
+    baseUrl: 'http://127.0.0.1:8000',
     primaryColor: '#2196f3',
     google_api_key: "AIzaSyAjDwk9KS9IQBm4FFoATMlZzw_ciH5UvIg",
     google_client_id: "332936812920-khr78bv7meit1vovvsbug97ptl43sgts.apps.googleusercontent.com",

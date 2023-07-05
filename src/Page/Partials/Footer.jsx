@@ -9,7 +9,7 @@ const Footer = () => {
             <div className={styles.Brand}>
                 <img src="/images/logo.png" alt="Logo Takotoko" className={styles.BrandImage} />
                 <div className="mt-2 mb-1 text size-20">PT TAKOTOKO NIAGA DARING</div>
-                <div className="mb-2 text size-14">Jalan Bumiarjo 5 No. 4, Surabaya, Indonesia</div>
+                <div className="mb-2 text size-14">Jl. Bumiarjo 5 No. 4, Surabaya, Indonesia</div>
                 <a href="mailto:takotoko.com@gmail.com" className="flex row item-center">
                     <BiEnvelope size={16} color="#999" />
                     <div className="text ml-1 size-14 muted">takotoko.com@gmail.com</div>
