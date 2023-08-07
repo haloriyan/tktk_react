@@ -8,6 +8,7 @@ import Cart from "./Cart";
 import CustomerOrderDetail from "./Customer/OrderDetail";
 import CustomerOrder from "./Customer/Order";
 import Chat from "./Chat";
+import CustomerPersonal from "./Customer/Profile";
 
 const UserRouter = () => {
     return (
@@ -16,6 +17,7 @@ const UserRouter = () => {
             <Route path="/:username/product/:slug" Component={Product} />
             <Route path="/:username/service/:slug" Component={Service} />
             <Route path="/:username/me" Component={Customer} />
+            <Route path="/:username/personal" Component={CustomerPersonal} />
             <Route path="/:username/cart" Component={Cart} />
             <Route path="/:username/chat" Component={Chat} />
 

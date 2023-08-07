@@ -62,13 +62,13 @@ const HomePage =() => {
                                 <div className="mt-1 text small muted">Otomatis Balas Chat dari Pelanggan</div>
                             </div>
                         </a>
-                        <a href="/solution/advanced-analytic" className={styles.FeatureBox}>
+                        <a href="#" className={styles.FeatureBox}>
                             <div className="h-80 ratio-1-1 rounded-max bg-primary transparent centerize">
                                 <BiStats size={32} />
                             </div>
                             <div className="flex column grow-1 ml-2">
-                                <h4 className="m-0 text bold size-18">Advanced Analytics</h4>
-                                <div className="mt-1 text small muted">Cari Tahu Produk yang Diminati</div>
+                                <h4 className="m-0 text bold size-18">Alat Beriklan</h4>
+                                <div className="mt-1 text small muted">Terintegrasi dengan Google & Facebook Ads</div>
                             </div>
                         </a>
                         <a href="/solution/customer-relation" className={styles.FeatureBox}>

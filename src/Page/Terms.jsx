@@ -1,38 +1,47 @@
-import React from "react";
+import React, { useState } from "react";
 import Header from "./Partials/Header";
-import { BiHome } from "react-icons/bi";
+import { BiDownArrow, BiDownArrowAlt, BiHome } from "react-icons/bi";
 import Footer from "./Partials/Footer";
+import styles from "../styles/Page/Terms.module.css";
 
 const Terms = () => {
+    const [active, setActive] = useState(true);
+
     return (
         <>
             <Header parent="terms" />
-            <div className="fixed left-0 bottom-0 w-20 bg-white p-2" style={{top: 65}}>
-                <a href="#" className="flex row item-center text black mb-1">
-                    <div className="h-5 rounded-max ratio-1-1 bg-black"></div>
+            <div className={`fixed left-0 right-0 bg-white border bottom h-60 flex row item-center pl-2 pr-2 ${styles.NavigationIndicator}`} style={{top: 60}} onClick={() => {
+                setActive(!active);
+            }}>
+                <div className="flex grow-1">Indicator Name</div>
+                <BiDownArrow />
+            </div>
+            <div className={`fixed left-0 w-20 bg-white p-2 ${styles.LeftNavigator}`} style={{top: 120, marginTop: active ? 0 : -1000}}>
+                <a href="#" className={`flex row item-center text black mb-1 ${styles.NavigatorItem}`}>
+                    <div className={`h-5 rounded-max ratio-1-1 bg-black ${styles.NavigatorBullet}`}></div>
                     <div className="text ml-1 size-14">Definisi</div>
                 </a>
-                <a href="#" className="flex row item-center text black mb-1">
-                    <div className="h-5 rounded-max ratio-1-1 bg-black"></div>
+                <a href="#" className={`flex row item-center text black mb-1 ${styles.NavigatorItem}`}>
+                    <div className={`h-5 rounded-max ratio-1-1 bg-black ${styles.NavigatorBullet}`}></div>
                     <div className="text ml-1 size-14">Biaya</div>
                 </a>
-                <a href="#" className="flex row item-center text black mb-1">
-                    <div className="h-5 rounded-max ratio-1-1 bg-black"></div>
+                <a href="#" className={`flex row item-center text black mb-1 ${styles.NavigatorItem}`}>
+                    <div className={`h-5 rounded-max ratio-1-1 bg-black ${styles.NavigatorBullet}`}></div>
                     <div className="text ml-1 size-14">Kekayaan Intelektual</div>
                 </a>
-                <a href="#" className="flex row item-center text black mb-1">
-                    <div className="h-5 rounded-max ratio-1-1 bg-black"></div>
+                <a href="#" className={`flex row item-center text black mb-1 ${styles.NavigatorItem}`}>
+                    <div className={`h-5 rounded-max ratio-1-1 bg-black ${styles.NavigatorBullet}`}></div>
                     <div className="text ml-1 size-14">Hal-hal yang Dilarang</div>
                 </a>
-                <a href="#" className="flex row item-center text black mb-1">
-                    <div className="h-5 rounded-max ratio-1-1 bg-black"></div>
+                <a href="#" className={`flex row item-center text black mb-1 ${styles.NavigatorItem}`}>
+                    <div className={`h-5 rounded-max ratio-1-1 bg-black ${styles.NavigatorBullet}`}></div>
                     <div className="text ml-1 size-14">Batasan Tanggung Jawab</div>
                 </a>
             </div>
-            <div className="absolute bottom-0 left-0 right-0 p-4" style={{top: 65}}>
+            <div className={`absolute bottom-0 left-0 right-0 ${styles.TermContent}`}>
                 <div className="flex row">
-                    <div className="flex column w-20"></div>
-                    <div className="flex column w-80 ">
+                    <div className={`flex column w-20 ${styles.Gapper}`}></div>
+                    <div className={`flex column ${styles.InnerContent}`}>
                         <h2 className="text size-36 m-0">Ketentuan Penggunaan</h2>
                         <div className="text size-16 lh-30 mt-2">
                             Dengan menggunakan Takotoko, Anda berarti setuju dengan seluruh ketentuan penggunaan dan sanksi yang berlaku yang disebut pada halaman ini. Segala perubahan yang ada

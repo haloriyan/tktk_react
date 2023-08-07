@@ -21,7 +21,7 @@ const Header = ({title, parent = 'home'}) => {
                     <li className={styles.MenuText}>Home</li>
                 </a>
                 <a href="/" className={`${styles.MenuItem} text ${parent === 'about' ? 'primary bold border bottom-2' : 'black'}`}>
-                    <li className={styles.MenuText}>About</li>
+                    <li className={styles.MenuText}>Tentang</li>
                 </a>
                 <a href="#" className={`${styles.MenuItem} text ${parent === 'usecase' ? 'primary bold border bottom-2' : 'black'}`}>
                     <li className={styles.MenuText}>Untuk Siapa?

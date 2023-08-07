@@ -62,9 +62,9 @@ const Customer = () => {
                         </div>
 
                         <div className="h-50"></div>
-                        <a className="border bottom h-70 flex row item-center text black">
+                        <a href={`/${username}/personal`} className="border bottom h-70 flex row item-center text black">
                             <BiUser size={24} />
-                            <div className="text ml-2">Data Pribadi</div>
+                            <div className="text ml-2">Data Saya</div>
                         </a>
                         <a href={`/${username}/order`} className="h-70 flex row item-center text black">
                             <BiShoppingBag size={24} />
