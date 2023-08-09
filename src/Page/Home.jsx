@@ -1,10 +1,14 @@
 import React, { useEffect } from "react";
+import banks from "../components/Banks";
 import styles from "../styles/Page/Home.module.css";
+import pageStyles from "../styles/Page/CustomerRelation.module.css"
 import Header from "./Partials/Header";
 import Footer from "./Partials/Footer";
-import { BiBox, BiCar, BiGroup, BiMessage, BiStats, BiWallet } from "react-icons/bi";
+import { BiBox, BiCar, BiCog, BiGroup, BiHome, BiLaptop, BiMessage, BiMusic, BiStats, BiWallet } from "react-icons/bi";
 import FAQ from "../components/FAQ.jsx";
 import CTA from "./Partials/CTA";
+import config from "../config";
+import { MdBed, MdCamera, MdCameraAlt, MdCarRepair, MdCheckroom, MdDinnerDining, MdMonitorHeart, MdPalette, MdTv } from "react-icons/md";
 
 const HomePage =() => {
     useEffect(() => {
@@ -102,6 +106,109 @@ const HomePage =() => {
 
                     <div className="h-40"></div>
                 </div>
+
+                <div className={`flex ${pageStyles.Section}`}>
+                    <div className="w-40 flex row item-center gap-20 wrap">
+                        <div className="bg-white rounded border bottom-6 transparent primary p-2 flex column centerize basis-3 grow-1">
+                            <div className="h-80 ratio-1-1 rounded-max bg-primary transparent flex centerize">
+                                <MdCheckroom color={config.primaryColor} size={32} />
+                            </div>
+                            <div className="mt-2 text small primary">Fashion</div>
+                        </div>
+                        <div className="bg-white rounded border bottom-6 transparent primary p-2 flex column centerize basis-3 grow-1">
+                            <div className="h-80 ratio-1-1 rounded-max bg-primary transparent flex centerize">
+                                <MdDinnerDining color={config.primaryColor} size={32} />
+                            </div>
+                            <div className="mt-2 text small primary">Food & Beverage</div>
+                        </div>
+                        <div className="bg-white rounded border bottom-6 transparent primary p-2 flex column centerize basis-3 grow-1">
+                            <div className="h-80 ratio-1-1 rounded-max bg-primary transparent flex centerize">
+                                <MdCheckroom color={config.primaryColor} size={32} />
+                            </div>
+                            <div className="mt-2 text small primary">Elektronik</div>
+                        </div>
+                        <div className="bg-white rounded border bottom-6 transparent primary p-2 flex column centerize basis-3 grow-1">
+                            <div className="h-80 ratio-1-1 rounded-max bg-primary transparent flex centerize">
+                                <BiCog color={config.primaryColor} size={32} />
+                            </div>
+                            <div className="mt-2 text small primary">Peralatan</div>
+                        </div>
+                        <div className="bg-white rounded border bottom-6 transparent primary p-2 flex column centerize basis-3 grow-1">
+                            <div className="h-80 ratio-1-1 rounded-max bg-primary transparent flex centerize">
+                                <BiMusic color={config.primaryColor} size={32} />
+                            </div>
+                            <div className="mt-2 text small primary">Hobi dan Hiburan</div>
+                        </div>
+                        <div className="bg-white rounded border bottom-6 transparent primary p-2 flex column centerize basis-3 grow-1">
+                            <div className="h-80 ratio-1-1 rounded-max bg-primary transparent flex centerize">
+                                <BiLaptop color={config.primaryColor} size={32} />
+                            </div>
+                            <div className="mt-2 text small primary">Karya Digital</div>
+                        </div>
+                    </div>
+                    <div className={pageStyles.SectionSpacer}></div>
+                    <div className={`flex column grow-1 ${pageStyles.SectionInfo}`}>
+                        <div className="h-5 w-25 bg-primary rounded-max mb-2"></div>
+                        <h3 className="text size-32 mt-0">Jual Apa Saja Dari Mana Saja</h3>
+                        <div className="lh-30 text size-18 weight-300">Buat Toko Online dengan Cepat dan mulai berjualan produk apapun yang Anda miliki.</div>
+                        <div className="text size-18 weight-300 lh-30 mt-2">
+                            Jual produk baik fisik maupun produk digital dari satu tempat dan termanage dengan baik.
+                        </div>
+                        <a href="/usecase/product" className="text bold primary mt-4">
+                            Selengkapnya
+                        </a>
+                    </div>
+                </div>
+                <div className={`flex ${pageStyles.SectionReversed}`}>
+                    <div className="w-40 flex row item-center gap-20 wrap">
+                        <div className="bg-white rounded border bottom-6 transparent primary p-2 flex column centerize basis-3 grow-1">
+                            <div className="h-80 ratio-1-1 rounded-max bg-primary transparent flex centerize">
+                                <MdTv color={config.primaryColor} size={32} />
+                            </div>
+                            <div className="mt-2 text small primary center">Reparasi Elektronik</div>
+                        </div>
+                        <div className="bg-white rounded border bottom-6 transparent primary p-2 flex column centerize basis-3 grow-1">
+                            <div className="h-80 ratio-1-1 rounded-max bg-primary transparent flex centerize">
+                                <MdMonitorHeart color={config.primaryColor} size={32} />
+                            </div>
+                            <div className="mt-2 text small primary center">Klinik & Kesehatan</div>
+                        </div>
+                        <div className="bg-white rounded border bottom-6 transparent primary p-2 flex column centerize basis-3 grow-1">
+                            <div className="h-80 ratio-1-1 rounded-max bg-primary transparent flex centerize">
+                                <MdCarRepair color={config.primaryColor} size={32} />
+                            </div>
+                            <div className="mt-2 text small primary center">Bengkel & Otomotif</div>
+                        </div>
+                        <div className="bg-white rounded border bottom-6 transparent primary p-2 flex column centerize basis-3 grow-1">
+                            <div className="h-80 ratio-1-1 rounded-max bg-primary transparent flex centerize">
+                                <MdCameraAlt color={config.primaryColor} size={32} />
+                            </div>
+                            <div className="mt-2 text small primary">Fotografer</div>
+                        </div>
+                        <div className="bg-white rounded border bottom-6 transparent primary p-2 flex column centerize basis-3 grow-1">
+                            <div className="h-80 ratio-1-1 rounded-max bg-primary transparent flex centerize">
+                                <MdPalette color={config.primaryColor} size={32} />
+                            </div>
+                            <div className="mt-2 text small primary">Desain Grafis</div>
+                        </div>
+                        <div className="bg-white rounded border bottom-6 transparent primary p-2 flex column centerize basis-3 grow-1">
+                            <div className="h-80 ratio-1-1 rounded-max bg-primary transparent flex centerize">
+                                <MdBed color={config.primaryColor} size={32} />
+                            </div>
+                            <div className="mt-2 text small primary center">Penginapan & Hospitality</div>
+                        </div>
+                    </div>
+                    <div className={pageStyles.SectionSpacer}></div>
+                    <div className={`flex column grow-1 ${pageStyles.SectionInfo}`}>
+                        <div className="h-5 w-25 bg-primary rounded-max mb-2"></div>
+                        <h3 className="text size-32 mt-0">Berikan Layanan Terbaik ke Client Terbaik</h3>
+                        <div className="lh-30 text size-18 weight-300">Dapatkan pengingat sebelum janji-temu berlangsung. Kamu bisa mendapatkan kapan saja yang kamu inginkan, beberapa jam sebelum, atau beberapa hari.</div>
+                        <a href="/usecase/service" className="text bold primary mt-4">
+                            Selengkapnya
+                        </a>
+                    </div>
+                </div>
+
                 <div className={`${styles.Section} bg-whites flex column item-center`}>
                     <h3 className="m-0 text center size-36">Jualan Online itu Gampang!</h3>
                     <div className="w-100 text center mb-5 mt-1">Beneran Gampang! Ini ibarat berhitung. Mari kita coba</div>
@@ -131,6 +238,39 @@ const HomePage =() => {
                         </div>
                     </div>
                 </div>
+
+                <div className="h-60"></div>
+
+                <div className="p-4 flex column item-center">
+                    <h3 className="text size-32 mt-0">Apalagi Didukung Berbagai Channel Pembayaran</h3>
+                    <div className="flex row justify-center wrap gap-20 w-100">
+                        <div className={`p-2 flex basis-5 grow-1 bg-white border bottom-6 primary transparent ${styles.SectionImage}`}>
+                            <img src={banks.va[0].image} alt={banks.va[0].name} className="w-100" />
+                        </div>
+                        <div className={`p-2 flex basis-5 grow-1 bg-white border bottom-6 primary transparent ${styles.SectionImage}`}>
+                            <img src={banks.va[1].image} alt={banks.va[1].name} className="w-100" />
+                        </div>
+                        <div className={`p-2 flex basis-5 grow-1 bg-white border bottom-6 primary transparent ${styles.SectionImage}`}>
+                            <img src={banks.va[2].image} alt={banks.va[0].name} className="w-100" />
+                        </div>
+                        <div className={`p-2 flex basis-5 grow-1 bg-white border bottom-6 primary transparent ${styles.SectionImage}`}>
+                            <img src={banks.va[3].image} alt={banks.va[0].name} className="w-100" />
+                        </div>
+                    </div>
+                    <div className="flex row justify-center wrap gap-20 w-100 mt-2">
+                        <div className={`p-2 flex basis-5 grow-1 bg-white border bottom-6 primary transparent ${styles.SectionImage}`}>
+                            <img src={banks.ewallet[0].image} alt={banks.ewallet[0].name} className="w-100" />
+                        </div>
+                        <div className={`p-2 flex basis-5 grow-1 bg-white border bottom-6 primary transparent ${styles.SectionImage}`}>
+                            <img src={banks.ewallet[1].image} alt={banks.ewallet[1].name} className="w-100" />
+                        </div>
+                        <div className={`p-2 flex basis-5 grow-1 bg-white border bottom-6 primary transparent ${styles.SectionImage}`}>
+                            <img src={banks.ewallet[2].image} alt={banks.ewallet[2].name} className="w-100" />
+                        </div>
+                    </div>
+                </div>
+
+                <div className="h-80"></div>
 
                 {/* 
 
