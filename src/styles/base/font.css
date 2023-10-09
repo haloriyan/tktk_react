@@ -28,6 +28,7 @@ h2,h3,h4,h5,h6 {
 .text.capitalize { text-transform: capitalize; }
 
 .text.size-10 { font-size: 10px; }
+.text.size-12 { font-size: 12px; }
 .text.size-14 { font-size: 14px; }
 .text.size-16 { font-size: 16px; }
 .text.size-20 { font-size: 20px; }

@@ -2,7 +2,7 @@ import axios from "axios";
 import React, { useState } from "react";
 import config from "../config";
 
-const CustomerOtp = ({setCustomer, customer, username}) => {
+const CustomerOtp = ({setCustomer, customer, user}) => {
     const [errorMessage, setErrorMessage] = useState('');
 
     const authenticate = code => {
@@ -15,7 +15,7 @@ const CustomerOtp = ({setCustomer, customer, username}) => {
             let res = response.data;
             if (res.status === 200) {
                 console.log(res);
-                window.localStorage.setItem(`customer_data_${username}`, JSON.stringify(res.customer));
+                window.localStorage.setItem(`customer_data_${user.id}`, JSON.stringify(res.customer));
                 setCustomer(null);
             } else {
                 setErrorMessage(res.message);

@@ -23,6 +23,10 @@ const PricingPage =() => {
     const [paymentTerm, setPaymentTerm] = useState('monthly');
 
     useEffect(() => {
+        document.title = "Pricing - Takotoko"
+    }, []);
+
+    useEffect(() => {
         if (isLoading) {
             setLoading(false);
             axios.get(`${config.baseUrl}/api/package`)

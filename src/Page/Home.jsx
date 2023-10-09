@@ -159,6 +159,7 @@ const HomePage =() => {
                         </a>
                     </div>
                 </div>
+                
                 <div className={`flex ${pageStyles.SectionReversed}`}>
                     <div className="w-40 flex row item-center gap-20 wrap">
                         <div className="bg-white rounded border bottom-6 transparent primary p-2 flex column centerize basis-3 grow-1">

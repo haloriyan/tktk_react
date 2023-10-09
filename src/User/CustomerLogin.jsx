@@ -1,12 +1,16 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import BottomNav from "../Partials/BottomNav";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import config from "../config";
 
-const CustomerLogin = ({username, setCustomer}) => {
+const CustomerLogin = ({username, setCustomer, user}) => {
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
+
+    useEffect(() => {
+        document.body.style.backgroundColor = "#fff";
+    }, [])
 
     const submit = (e) => {
         axios.post(`${config.baseUrl}/api/user/${username}/customer/register`, {

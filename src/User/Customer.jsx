@@ -3,10 +3,13 @@ import BottomNav from "../Partials/BottomNav";
 import { useParams } from "react-router-dom";
 import CustomerLogin from "./CustomerLogin";
 import CustomerOtp from "./CustomerOtp";
-import { BiShoppingBag, BiUser } from "react-icons/bi";
+import { BiCopyright, BiShoppingBag, BiUser } from "react-icons/bi";
 import axios from "axios";
 import config from "../config";
 import { MdAbc } from "react-icons/md";
+import GoogleFonts from "../components/GoogleFonts";
+import Initial from "../components/Initial";
+import moment from "moment";
 
 const Customer = () => {
     const { username } = useParams();
@@ -14,8 +17,20 @@ const Customer = () => {
     const [user, setUser] = useState(null);
 
     useEffect(() => {
-        if (customer === null) {
-            let myData = JSON.parse(window.localStorage.getItem(`customer_data_${username}`));
+        if (user === null) {
+            axios.get(`${config.baseUrl}/api/user/${username}?with=premium.package`)
+            .then(response => {
+                let res = response.data;
+                let usr = JSON.parse(JSON.stringify(res.user));
+                console.log(usr);
+                setUser(usr);
+            })
+        }
+    }, [customer, user]);
+
+    useEffect(() => {
+        if (customer === null && user !== null) {
+            let myData = JSON.parse(window.localStorage.getItem(`customer_data_${user.id}`));
             if (myData === null) {
                 setCustomer('unauthenticated');
             } else {
@@ -25,10 +40,10 @@ const Customer = () => {
                 })
                 .then(response => {
                     let res = response.data;
-                    console.log(res);
+                    let cust = res.customer;
+                    window.localStorage.setItem(`customer_data_${user.id}`, JSON.stringify(cust));
                     if (res.status === 200) {
-                        setCustomer(myData);
-                        setUser(res.user);
+                        setCustomer(cust);
                     } else {
                         setCustomer('unauthenticated');
                     }
@@ -41,20 +56,24 @@ const Customer = () => {
         <>
             <div className="content">
                 {
-                    customer === 'unauthenticated' &&
-                    <CustomerLogin username={username} setCustomer={setCustomer} />
+                    user !== null &&
+                    <GoogleFonts family={user.font_family} />
+                }
+                {
+                    (customer === 'unauthenticated' && user !== null) &&
+                    <CustomerLogin username={username} setCustomer={setCustomer} user={user} />
                 }
                 {
                     (customer !== null && customer.length) === 32 &&
-                    <CustomerOtp customer={customer} setCustomer={setCustomer} username={username} />
+                    <CustomerOtp customer={customer} setCustomer={setCustomer} username={username} user={user} />
                 }
                 {
                     (customer !== null && customer !== 'unauthenticated' && customer.length !== 32) &&
                     <div className="mt-2 inner_content">
                         <div className="flex row item-center">
-                            <div className="h-80 text white rounded-max ratio-1-1 flex row item-center justify-center" style={{
+                            <Initial name={customer.name} size={80} style={{
                                 backgroundColor: user === null ? null : user.accent_color
-                            }}>BW</div>
+                            }} />
                             <div className="flex column grow-1 ml-2">
                                 <h2 className="m-0">{customer.name}</h2>
                                 <div className="mt-05 text small">{customer.email}</div>
@@ -64,12 +83,23 @@ const Customer = () => {
                         <div className="h-50"></div>
                         <a href={`/${username}/personal`} className="border bottom h-70 flex row item-center text black">
                             <BiUser size={24} />
-                            <div className="text ml-2">Data Saya</div>
+                            <div className="text ml-2">Data Personal</div>
                         </a>
                         <a href={`/${username}/order`} className="h-70 flex row item-center text black">
                             <BiShoppingBag size={24} />
-                            <div className="text ml-2">Pesanan Saya</div>
+                            <div className="text ml-2">Pesanan</div>
                         </a>
+
+                        {
+                            user !== null &&
+                            (user.premium[0].package.price_monthly > 0 && user.premium[0].payment_status === "PAID" && moment(user.premium[0].expiry).diff(moment(), 'days') >= 0) ?
+                            ''
+                            :
+                            <div className="text small muted flex row item-center justify-center mt-2 gap-10">
+                                <BiCopyright />
+                                Copyright 2023 - Takotoko
+                            </div>
+                        }
                     </div>
                 }
             </div>

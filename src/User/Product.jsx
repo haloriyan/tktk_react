@@ -12,11 +12,13 @@ import { BiLeftArrow } from "react-icons/bi";
 import { MdWest } from "react-icons/md";
 import Popup from "../components/Popup";
 import Alert from "../components/Alert";
+import GoogleFonts from "../components/GoogleFonts";
 
 const Product = () => {
     const { username, slug } = useParams();
     const navigate = useNavigate();
     const [isLoading, setLoading] = useState(true);
+    const [isLoadingUser, setLoadingUser] = useState(true);
     const [product, setProduct] = useState(null);
     const [imageIndex, setImageIndex] = useState(0);
     const [viewingImage, setViewingImage] = useState(null);
@@ -27,7 +29,6 @@ const Product = () => {
     useEffect(() => {
         if (isLoading && customer !== null) {
             setLoading(false);
-            console.log('loading');
 
             let payload = null;
             if (customer !== 'unauthorized') {
@@ -43,16 +44,27 @@ const Product = () => {
     }, [isLoading, customer]);
 
     useEffect(() => {
-        if (customer === null) {
-            let customerData = JSON.parse(window.localStorage.getItem(`customer_data_${username}`));
+        if (user === null && isLoadingUser) {
+            setLoadingUser(false);
+            axios.get(`${config.baseUrl}/api/user/${username}`)
+            .then(response => {
+                let res = response.data;
+                setUser(res.user);
+            })
+        }
+    }, [user, isLoadingUser]);
+
+    useEffect(() => {
+        if ((customer === null && customer !== 'loading') && user !== null) {
+            let customerData = JSON.parse(window.localStorage.getItem(`customer_data_${user.id}`));
+            console.log(customerData);
             if (customerData === null) {
                 setCustomer('unauthorized')
             } else {
-                console.log('ada data');
                 setCustomer(customerData)
             }
         }
-    }, [customer]);
+    }, [customer, user]);
 
     const addToCart = () => {
         if (customer === "unauthorized") {
@@ -73,6 +85,10 @@ const Product = () => {
         <LoadingScreen />
     :
         <>
+            {
+                user !== null &&
+                <GoogleFonts family={user.font_family} />
+            }
             <div className="content">
                 <div className="h-55"></div>
                 <img 

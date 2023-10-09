@@ -8,6 +8,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { MdWest } from "react-icons/md";
 import { BiPaperPlane, BiSearch } from "react-icons/bi";
 import Initial from "../components/Initial";
+import GoogleFonts from "../components/GoogleFonts";
 
 const Chat = () => {
     const { username } = useParams();
@@ -20,15 +21,15 @@ const Chat = () => {
     const [message, setMessage] = useState('');
 
     useEffect(() => {
-        if (customer === null) {
-            let myData = JSON.parse(window.localStorage.getItem(`customer_data_${username}`));
+        if (customer === null && user !== null) {
+            let myData = JSON.parse(window.localStorage.getItem(`customer_data_${user.id}`));
             if (myData === null) {
                 navigate(`/${username}/me`)
             } else {
                 setCustomer(myData);
             }
         }
-    }, [customer]);
+    }, [customer, user]);
 
     useEffect(() => {
         if (isLoading) {
@@ -75,6 +76,10 @@ const Chat = () => {
 
     return (
         <>
+            {
+                user !== null &&
+                <GoogleFonts family={user.font_family} />
+            }
             <div className={`content mt-4 ${styles.content}`}>
                 <div className="h-40"></div>
                 {

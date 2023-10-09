@@ -7,6 +7,7 @@ const config = {
     google_api_key: "AIzaSyAjDwk9KS9IQBm4FFoATMlZzw_ciH5UvIg",
     google_client_id: "332936812920-khr78bv7meit1vovvsbug97ptl43sgts.apps.googleusercontent.com",
     google_client_secret: "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",
+    rajaongkir: "c568e39b6403b4bfa2f41284c2f85d30",
     colors: {
         green: '#2ecc71',
         grey: '#ddd',

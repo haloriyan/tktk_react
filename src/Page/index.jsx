@@ -13,6 +13,10 @@ import ArtificialCareSolution from "./Solution/ArtificialCare";
 import ShippingSolution from "./Solution/Shipping";
 import Terms from "./Terms";
 import ProductUsecase from "./Usecase/Product";
+import Auth from "./Auth";
+import { GoogleOAuthProvider } from "@react-oauth/google";
+import config from "../config";
+import Privacy from "./Privacy";
 
 const PageRouter = () => {
     return (
@@ -21,6 +25,8 @@ const PageRouter = () => {
             <Route path="/about" Component={AboutPage} />
             <Route path="/pricing" Component={PricingPage} />
             <Route path="/terms" Component={Terms} />
+            <Route path="/privacy" Component={Privacy} />
+            <Route path="/auth/:token" element={<GoogleOAuthProvider clientId={config.google_client_id}><Auth /></GoogleOAuthProvider>} />
 
             <Route path="/solution/customer-relation" Component={CustomerRelationSolution} />
             <Route path="/solution/advanced-analytic" Component={AnalyticSolution} />

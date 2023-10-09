@@ -5,27 +5,43 @@ import axios from "axios";
 import config from "../config";
 import Currency from "../components/Currency";
 import LoadingScreen from "../Partials/LoadingScreen";
+import { BiMinus, BiTrash } from "react-icons/bi";
+import GoogleFonts from "../components/GoogleFonts";
 
 const Cart = () => {
     const { username } = useParams();
     const navigate = useNavigate();
     const [isLoading, setLoading] = useState(true);
+    const [isLoadingUser, setLoadingUser] = useState(true);
     const [items, setItems] = useState([]);
+    const [hasItems, setHasItems] = useState(false);
+    const [buttonText, setButtonText] = useState('Checkout');
 
     const [user, setUser] = useState(null);
     const [customer, setCustomer] = useState(null);
     const [grandTotal, setGrandTotal] = useState(0);
 
     useEffect(() => {
-        if (customer === null) {
-            let myData = JSON.parse(window.localStorage.getItem(`customer_data_${username}`));
+        if (isLoadingUser && user === null) {
+            setLoadingUser(false);
+            axios.get(`${config.baseUrl}/api/user/${username}`)
+            .then(response => {
+                let res = response.data;
+                setUser(res.user);
+            })
+        }
+    }, [isLoadingUser, user]);
+
+    useEffect(() => {
+        if (customer === null && user !== null) {
+            let myData = JSON.parse(window.localStorage.getItem(`customer_data_${user.id}`));
             if (myData === null) {
                 navigate(`/${username}/me`)
             } else {
                 setCustomer(myData);
             }
         }
-    }, [customer]);
+    }, [customer, user]);
 
     useEffect(() => {
         if (isLoading && customer !== null) {
@@ -35,8 +51,8 @@ const Cart = () => {
             })
             .then(response => {
                 let res = response.data;
+                setHasItems(res.items.length > 0 ? true : false);
                 setItems(res.items);
-                setUser(res.user);
                 
                 const gt = res.items.reduce((acm, obj) => {
                     return acm + obj.total_price;
@@ -58,18 +74,32 @@ const Cart = () => {
     }
 
     const checkout = () => {
+        setButtonText('Memproses...');
         axios.post(`${config.baseUrl}/api/user/${username}/customer/cart/checkout`, {
             token: customer.token,
         })
         .then(response => {
+            setButtonText('Checkout');
             let res = response.data;
-            console.log(res);
             navigate(`/${username}/order/${res.code}`);
+        })
+        .catch(e => {
+            setButtonText('Checkout');
         })
     }
 
+    useEffect(() => {
+        if (user !== null) {
+            document.title = `Keranjang Belanja - ${user.name}`
+        }
+    }, [user]);
+
     return (
         <>
+            {
+                user !== null &&
+                <GoogleFonts family={user.font_family} />
+            }
             <div className="content">
                 <div className="inner_content">
                     <h2 className="m-0 mt-3">Keranjang</h2>
@@ -92,7 +122,9 @@ const Cart = () => {
                                         <div className="text small mt-05" style={{color: user.accent_color}}>{Currency(item.total_price).encode()}</div>
                                     </div>
                                     <div className="flex row item-center justify-end ml-2">
-                                        <div className="border h-30 ratio-1-1 rounded centerize pointer" onClick={() => setQuantity('decrease', product)}>-</div>
+                                        <div className="border h-30 ratio-1-1 rounded centerize pointer" onClick={() => setQuantity('decrease', product)}>
+                                            {item.quantity === 1 ? <BiTrash color={config.colors.red} /> : <BiMinus />}
+                                        </div>
                                         <div className="ml-2 mr-2">{item.quantity}</div>
                                         <div className="border h-30 ratio-1-1 rounded centerize pointer" onClick={() => setQuantity('increase', product)}>+</div>
                                     </div>
@@ -101,16 +133,29 @@ const Cart = () => {
                         })
                     }
 
-                    <div className="flex row item-center mt-2">
-                        <div className="text small muted flex grow-1">Total Belanja :</div>
-                        <div className="text bold" style={{color: user === null ? config.primaryColor : user.accent_color}}>
-                            {Currency(grandTotal).encode()}
+                    {
+                        hasItems ?
+                        <>
+                            <div className="flex row item-center mt-2">
+                                <div className="text small muted flex grow-1">Total Belanja :</div>
+                                <div className="text bold" style={{color: user === null ? config.primaryColor : user.accent_color}}>
+                                    {Currency(grandTotal).encode()}
+                                </div>
+                            </div>
+                            <button className="w-100 text white h-40 p-0 bold mt-2" onClick={checkout} style={{
+                                background: user === null ? config.primaryColor : user.accent_color
+                            }}>{buttonText}</button>
+                        </>
+                        :
+                        <div>
+                            Tidak ada apapun di sini
+                            <a href={`/${username}`}>
+                                <button className="w-100 text white h-40 p-0 bold mt-2" style={{
+                                    background: user === null ? config.primaryColor : user.accent_color
+                                }}>Mulai Belanja</button>
+                            </a>
                         </div>
-                    </div>
-
-                    <button className="w-100 text white h-40 p-0 bold mt-2" onClick={checkout} style={{
-                        background: user === null ? config.primaryColor : user.accent_color
-                    }}>Checkout</button>
+                    }
                 </div>
             </div>
             <BottomNav active="cart" username={username} accent_color={user === null ? null : user.accent_color} />
