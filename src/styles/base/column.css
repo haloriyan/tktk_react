@@ -84,9 +84,11 @@ div {
 .flex.item-center { align-items: center; }
 .flex.item-stretch { align-items: stretch; }
 
+.gap-5 { gap: 5px; }
 .gap-10 { gap: 10px; }
 .gap-20 { gap: 20px; }
 .gap-30 { gap: 30px; }
+.gap-40 { gap: 40px; }
 
 .w-5 { width: 5%; }
 .w-10 { width: 10%; }

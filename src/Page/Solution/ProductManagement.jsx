@@ -15,7 +15,7 @@ const ProductManagementSolution =() => {
                 <div className={`bg-white flex row item-center h-650 pl-4 pr-4 ${styles.TopSection}`}>
                     <div className={`flex column grow-1 w-50 ${styles.TopSectionInfo}`}>
                         <div className="text small primary">Solusi &gt; Product Management</div>
-                        <h2 className={`text size-46 mt-1 ${styles.TopSectionTitle}`}>Kelola PRoduk dan Layanan Jasa di Satu Tempat</h2>
+                        <h2 className={`text size-46 mt-1 ${styles.TopSectionTitle}`}>Kelola Produk dan Layanan Jasa di Satu Tempat</h2>
 
                         <div className="flex ro">
                             <button className="primary">Coba Sekarang</button>

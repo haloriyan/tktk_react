@@ -1,5 +1,5 @@
 import React from "react";
-import { BiHome, BiLogOutCircle } from "react-icons/bi";
+import { BiChart, BiHome, BiLogOutCircle } from "react-icons/bi";
 
 const LeftMenu = ({active = 'dashboard', user = null}) => {
     return (
@@ -29,6 +29,13 @@ const LeftMenu = ({active = 'dashboard', user = null}) => {
                 }}>
                     <BiHome />
                     <div className="text ml-2">Coupon</div>
+                </a>
+                <a href="/affiliate/report" className="flex row item-center text white p-15 pl-2 pr-2" style={{
+                    backgroundColor: active === 'report' ? '#ffffff' : 'none',
+                    color: active === 'report' ? '#00192d' : '#fff',
+                }}>
+                    <BiChart />
+                    <div className="text ml-2">Report</div>
                 </a>
                 <a href="/affiliate/logout" className="flex row item-center text white p-15 pl-2 pr-2">
                     <BiLogOutCircle />

@@ -10,7 +10,7 @@ const Initial = ({name, size = 40, textSize = 14, style}) => {
             init = `${init}${names[names.length - 1][0]}`;
         }
         setInitial(init);
-    }, [initial]);
+    }, [initial, name]);
 
     return initial !== null && (
         <div className="ratio-1-1 rounded-max bg-primary centerize" style={{height: size, ...style}}>

@@ -1,12 +1,16 @@
 import React, { useEffect, useState } from "react";
 import BottomNav from "../Partials/BottomNav";
+import Flatpickr from "react-flatpickr";
+import "flatpickr/dist/themes/material_blue.css";
 import { useActionData, useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import config from "../config";
 import Currency from "../components/Currency";
 import LoadingScreen from "../Partials/LoadingScreen";
-import { BiMinus, BiTrash } from "react-icons/bi";
+import { BiCalendar, BiMinus, BiTrash } from "react-icons/bi";
 import GoogleFonts from "../components/GoogleFonts";
+import moment from "moment";
+import Popup from "../components/Popup";
 
 const Cart = () => {
     const { username } = useParams();
@@ -20,6 +24,10 @@ const Cart = () => {
     const [user, setUser] = useState(null);
     const [customer, setCustomer] = useState(null);
     const [grandTotal, setGrandTotal] = useState(0);
+
+    const [isEditingBookingDate, setEditingBookingDate] = useState(false);
+    const [item ,setItem] = useState(null);
+    const [disabledDates, setDisabledDates] = useState([]);
 
     useEffect(() => {
         if (isLoadingUser && user === null) {
@@ -119,7 +127,26 @@ const Cart = () => {
                                     />
                                     <div className="flex column grow-1 ml-2">
                                         <div className="text bold">{product.name}</div>
-                                        <div className="text small mt-05" style={{color: user.accent_color}}>{Currency(item.total_price).encode()}</div>
+                                        <div className="flex row item-center gap-10 mt-05">
+                                            <div className="text small" style={{color: user.accent_color}}>{Currency(item.total_price).encode()}</div>
+                                            {
+                                                item.product.is_service &&
+                                                <>
+                                                    <div>-</div>
+                                                    <div className="text small flex row item-center gap-5"><BiCalendar /> {moment(item.booking_date).format('DD MMM')}. {' '}
+                                                        <span className="pointer text underline" style={{color: user.accent_color}} onClick={() => {
+                                                            setItem(item);
+                                                            axios.get(`${config.baseUrl}/api/product/${item.product.id}/schedule`)
+                                                            .then(response => {
+                                                                let res = response.data;
+                                                                setDisabledDates(res.disabled_dates);
+                                                                setEditingBookingDate(true);
+                                                            })
+                                                        }}>Edit</span>
+                                                    </div>
+                                                </>
+                                            }
+                                        </div>
                                     </div>
                                     <div className="flex row item-center justify-end ml-2">
                                         <div className="border h-30 ratio-1-1 rounded centerize pointer" onClick={() => setQuantity('decrease', product)}>
@@ -158,6 +185,24 @@ const Cart = () => {
                     }
                 </div>
             </div>
+
+            {
+                isEditingBookingDate &&
+                <Popup onDismiss={() => setEditingBookingDate(false)}>
+                    <div className="text size-20 bold">Ganti Tanggal Booking</div>
+                    <Flatpickr
+                        onChange={(a, b) => {
+                            // 
+                        }}
+                        options={{
+                            minDate: 'today',
+                            maxDate: moment().add(30, 'days').format('Y-MM-DD HH:mm:00'),
+                            disable: disabledDates
+                        }}
+                    />
+                </Popup>
+            }
+
             <BottomNav active="cart" username={username} accent_color={user === null ? null : user.accent_color} />
         </>
     )

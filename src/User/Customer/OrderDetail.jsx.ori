@@ -1,0 +1,469 @@
+import React, { useEffect, useState } from "react";
+import BottomNav from "../../Partials/BottomNav";
+import { useNavigate, useParams } from "react-router-dom";
+import axios from "axios";
+import config from "../../config";
+import banks from "../../components/Banks.js";
+import LoadingScreen from "../../Partials/LoadingScreen";
+import Currency from "../../components/Currency";
+import moment from "moment";
+import Popup from "../../components/Popup";
+import { BiCalendar, BiStar, BiX } from "react-icons/bi";
+import { FaStar } from "react-icons/fa";
+
+const CustomerOrderDetail = () => {
+    const { username, code } = useParams();
+    const navigate = useNavigate();
+    const starMax = [1,1,1,1,1];
+    const [isLoading, setLoading] = useState(true);
+    const [isLoadingStatus, setLoadingStatus] = useState(false);
+    const [isLoadingPayment, setLoadingPayment] = useState(false);
+    const [hasPhysicalProduct, setHasPhysicalProduct] = useState(false);
+    const [hasService, setHasService] = useState(false);
+    const [order, setOrder] = useState(null);
+    const [product, setProduct] = useState(null);
+    const [user, setUser] = useState(null);
+    const [customer, setCustomer] = useState(null);
+    const [method, setMethod] = useState(null);
+    const [channel, setChannel] = useState(null);
+    const [vat, setVat] = useState(0);
+    const [channelProperties, setChannelProperties] = useState(null);
+    const [payment, setPayment] = useState(null);
+
+    // for review
+    const [rate, setRate] = useState(null);
+    const [reviewBody, setReviewBody] = useState('');
+
+    const [isChoosingPayment, setChoosingPayment] = useState(false);
+    const [isWritingReview, setWritingReview] = useState(false);
+    const [isViewingReview, setViewingReview] = useState(false);
+    const [paymentInstructionVisible, setPaymentInstructionVisible] = useState(false);
+
+    useEffect(() => {
+        document.body.style.backgroundColor = "#fff";
+    }, [])
+
+    useEffect(() => {
+        if (customer === null && user !== null) {
+            setCustomer(
+                JSON.parse(window.localStorage.getItem(`customer_data_${user.id}`))
+            )
+        }
+    }, [customer, user]);
+
+    useEffect(() => {
+        if (isLoading) {
+            setLoading(false);
+            axios.post(`${config.baseUrl}/api/user/${username}/customer/order/${code}`)
+            .then(response => {
+                let res = response.data;
+                let ord = res.order;
+                setOrder(res.order);
+                setUser(res.order.user);
+                setLoadingStatus(true);
+                setVat(
+                    11 / 100 * res.order.total_pay
+                );
+
+                ord.items.map(item => {
+                    if (!item.product.is_service && item.product.type !== "digital") {
+                        setHasPhysicalProduct(true);
+                    }
+                    if (item.product.is_service) {
+                        setHasService(true);
+                    }
+                })
+            })
+        }
+    }, [isLoading]);
+
+    const placeOrder = () => {
+        axios.post(`${config.baseUrl}/api/user/${username}/customer/order/${code}/place`, {
+            payments: `${method}|${channel}`,
+            channel_properties: channelProperties
+        })
+        .then(response => {
+            let res = response.data;
+            if (res.status === 200) {
+                navigate(0);
+            }
+            console.log(res);
+        })
+    }
+    const getPaymentStatus = () => {
+        let theID = "";
+        if (order.payment_method === "VA") {
+            theID = order.payment_id;
+        }
+        axios.get(`${config.baseUrl}/api/payment/${theID}`)
+        .then(response => {
+            let res = response.data;
+            setPayment(res.payment);
+        })
+    }
+    const submitReview = () => {
+        axios.post(`${config.baseUrl}/api/user/${username}/customer/review`, {
+            body: reviewBody,
+            rate: rate,
+            token: customer.token,
+            order_id: order.id,
+            product_id: product.id,
+        })
+        .then(response => {
+            let res = response.data;
+            navigate(0);
+        })
+    }
+
+    return order === null ?
+        <LoadingScreen />
+    :
+        <>
+            <div className="content">
+                <div className="inner_content">
+                    <div className="flex row item-center">
+                        <div className="flex column grow-1 mr-2">
+                            <h2 className="m-0 mt-2">Detail Pesanan</h2>
+                            <div className="text small muted mt-1">Kode : {code}</div>
+                        </div>
+                    </div>
+
+                    <div className="h-40"></div>
+
+                    {
+                        !isChoosingPayment &&
+                        <div className="bg-white">
+                            {
+                                order.items.map((item, i) => (
+                                    <div key={i} className={`flex row item-center gap-20 border bottom pb-2 mb-2`}>
+                                        <img 
+                                            src={`${config.baseUrl}/storage/u${item.product.user_id}/product_images/${item.product.image.filename}`} 
+                                            alt={item.product.name} 
+                                            className="h-70 ratio-1-1 rounded"
+                                        />
+                                        <div className="flex column grow-1">
+                                            <div className="text bold">{item.product.name}</div>
+                                            {
+                                                item.product.is_service ?
+                                                <div className="flex row item-center gap-10 text size-12 mt-05">
+                                                    <BiCalendar />
+                                                    Tanggal Booking :
+                                                    <span style={{color: user.accent_color}}>{moment(item.booking_date).format('DD MMM Y, HH:mm')} WIB</span>
+                                                </div>
+                                                :
+                                                <div className="flex row item-center gap-10">
+                                                    <div className="text small mt-05">{item.quantity} item(s)</div>
+                                                    {
+                                                        order.payment_status === 'PAID' &&
+                                                        <>
+                                                        {
+                                                            item.product.type === "digital" &&
+                                                            <>
+                                                                <div>
+                                                                {
+                                                                    (moment().diff(moment(order.created_at), 'days') <= item.product.download_expiration) ?
+                                                                        <a href={`${config.baseUrl}/storage/u${user.id}/product_files/${item.product.filename}`} className="text size-12" style={{color: user.accent_color}}>
+                                                                            Download
+                                                                        </a>
+                                                                    :
+                                                                        <div className="text size-12 muted">Pembelian Kedaluwarsa</div>
+                                                                }
+                                                                </div>
+                                                                <span className="pointer text size-12" style={{color: user.accent_color}} onClick={() => {
+                                                                    setProduct(item.product);
+                                                                    if (item.product.review === null) {
+                                                                        setWritingReview(true);
+                                                                    } else {
+                                                                        setViewingReview(true);
+                                                                    }
+                                                                }}>
+                                                                    {item.product.review === null ? 'Tulis Ulasan' : 'Lihat Ulasan'}
+                                                                </span>
+                                                            </>
+                                                        }
+                                                        </>
+                                                    }
+                                                </div>
+                                            }
+                                        </div>
+                                        <div className="text bold" style={{color: user.accent_color}}>{Currency(item.total_price).encode()}</div>
+                                    </div>
+                                ))
+                            }
+                            <div className={`flex row item-center gap-20 border bottom pb-2 mb-2`}>
+                                <div className="text flex grow-1">PPN (11%)</div>
+                                <div className="text bold">
+                                    {Currency(vat).encode()}
+                                </div>
+                            </div>
+                            <div className={`flex row item-center gap-20 pb-2`}>
+                                <div className="text flex grow-1">Total</div>
+                                <div className="text bold">
+                                    {Currency(vat + order.total_pay).encode()}
+                                </div>
+                            </div>
+                        </div>
+                    }
+
+                    {
+                        (order.payment_method === null && !isChoosingPayment) &&
+                        <button className="w-100 text white h-40 p-0 bold mt-2" onClick={() => setChoosingPayment(true)} style={{
+                            background: user === null ? config.primaryColor : user.accent_color
+                        }}>Pilih Pembayaran</button>
+                    }
+
+                    {
+                        (order.payment_method === null && isChoosingPayment) &&
+                        <div>
+                            <div className="bg-white rounded shadow p-2">
+                                <div className={`flex row item-center gap-20`}>
+                                    <div className="text flex grow-1">Total</div>
+                                    <div className="text bold">
+                                        {Currency(vat + order.total_pay).encode()}
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="text center pointer mb-2 mt-2" style={{color: user.accent_color}} onClick={() => setChoosingPayment(false)}>
+                                Lihat Detail Pesanan
+                            </div>
+                            <div className="border bottom h-70 flex row item-center pointer" onClick={() => setMethod('va')}>
+                                <h4 className="m-0 flex grow-1 mr-2">Virtual Account</h4>
+                                <div className="border primary rounded-max" style={{padding: 3,borderColor: method === 'va' ? user.accent_color : '#ddd'}}>
+                                    {
+                                        <div className="h-15 rounded-max ratio-1-1" style={{background: method === 'va' ? user.accent_color : '#fff'}}></div>
+                                    }
+                                </div>
+                            </div>
+                            {
+                                method === 'va' &&
+                                <div className="flex row wrap mt-1">
+                                    {
+                                        banks.va.map((va, v) => (
+                                            <div key={v} className="flex column basis-3 grow-1 pointer border rounded" style={{
+                                                borderColor: channel === va.code ? user.accent_color : '#ffffff00',
+                                                backgroundColor: channel === va.code ? `${user.accent_color}20` : '#ffffff00'
+                                            }} onClick={() => {
+                                                setChannel(va.code);
+                                            }}>
+                                                <img src={va.image} alt={va.name} />
+                                            </div>
+                                        ))
+                                    }
+                                </div>
+                            }
+
+                            <div className="border bottom h-70 flex row item-center pointer" onClick={() => setMethod('ewallet')}>
+                                <h4 className="m-0 flex grow-1 mr-2">E-Wallet</h4>
+                                <div className="border primary rounded-max" style={{padding: 3,borderColor: method === 'ewallet' ? user.accent_color : '#ddd'}}>
+                                    {
+                                        <div className="h-15 rounded-max ratio-1-1" style={{background: method === 'ewallet' ? user.accent_color : '#fff'}}></div>
+                                    }
+                                </div>
+                            </div>
+                            {
+                                method === 'ewallet' &&
+                                <div className="flex row wrap mt-1 wrap">
+                                    {
+                                        banks.ewallet.map((va, v) => (
+                                            <div key={v} className="flex column basis-3 grow-1 pointer border rounded" style={{borderColor: channel === va.code ? user.accent_color : '#ffffff00'}} onClick={() => {
+                                                setChannel(va.code);
+                                                if (va.code === 'id_ovo') {
+                                                    setChannelProperties('+62');
+                                                }
+                                            }}>
+                                                <img src={va.image} alt={va.name} />
+                                            </div>
+                                        ))
+                                    }
+
+                                    {
+                                        (channel === 'id_ovo' || channel === 'id_jeniuspay') &&
+                                        <div className="flex w-100 column grow-1 mt-2">
+                                            <div className="group">
+                                                <input type="text" id="channel_properties" value={channelProperties} onInput={e => setChannelProperties(e.currentTarget.value)} />
+                                                <label htmlFor="channel_properties">
+                                                    {channel === 'id_ovo' && 'No. Telepon'}
+                                                    {channel === 'id_jeniuspay' && 'Cashtag'}
+                                                </label>
+                                            </div>
+                                        </div>
+                                    }
+                                </div>
+                            }
+
+                            {
+                                channel !== null &&
+                                <button className="w-100 text white h-40 p-0 bold mt-2" onClick={placeOrder} style={{
+                                    background: user === null ? config.primaryColor : user.accent_color
+                                }}>Place Order</button>
+                            }
+                        </div>
+                    }
+
+                    {
+                        order.payment_status === 'PAID' ?
+                        <>
+                            {
+                                order.items[0].product.is_service ?
+                                <>
+                                    {/*  */}
+                                </>
+                                :
+                                <>
+                                    <button className="w-100 text white h-40 p-0 bold mt-2" onClick={() => {
+                                        setPayment(null);
+                                        setPaymentInstructionVisible(true);
+                                        getPaymentStatus();
+                                    }} style={{
+                                        background: user === null ? config.primaryColor : user.accent_color
+                                    }}>Pilih Opsi Pengiriman</button>
+                                </>
+                            }
+                        </>
+                        :
+                        order.payment_method !== null &&
+                        <>
+                            <div className={`flex row item-center gap-20 pt-2 mb-2`} style={{borderTop: '1px solid #ddd'}}>
+                                <div className="text flex grow-1">Status Pembayaran</div>
+                                <div className="text bold red">
+                                    {order.payment_status}
+                                </div>
+                            </div>
+
+                            <button className="w-100 text white h-40 p-0 bold mt-2" onClick={() => {
+                                setPayment(null);
+                                setPaymentInstructionVisible(true);
+                                getPaymentStatus();
+                            }} style={{
+                                background: user === null ? config.primaryColor : user.accent_color
+                            }}>Lihat Instruksi Pembayaran</button>
+
+                            <div className="text center pointer mt-2 size-14" onClick={() => navigate(0)} style={{color: user === null ? config.primaryColor : user.accent_color}}>
+                                Cek Ulang Status Pembayaran
+                            </div>
+                        </>
+                    }
+                </div>
+
+                <div className="h-100"></div>
+            </div>
+            <BottomNav active="me" accent_color={user === null ? null : user.accent_color} />
+
+            {
+                paymentInstructionVisible &&
+                <Popup onDismiss={() => setPaymentInstructionVisible(false)}>
+                    {
+                        payment === null ?
+                            <>loading...</>
+                        :
+                        <>
+                            <h3 className="m-0 mb-2">Instruksi Pembayaran</h3>
+                            {
+                                banks[order.payment_method.toLowerCase()].map(item => {
+                                    if (item.code === payment.bank_code.toLowerCase()) {
+                                        return (
+                                            <div className="text center mb-2">
+                                                <img src={item.image} alt={payment.bank_code} className="h-150" />
+                                            </div>
+                                        )
+                                    }
+                                })
+                            }
+                            {
+                                order.payment_method === "VA" &&
+                                <>
+                                    <div className={`flex row item-center gap-20 pb-1 mb-1 border bottom`}>
+                                        <div className="text flex grow-1">Tujuan Pembayaran</div>
+                                        <div className="text bold">
+                                            {order.payment_method} {payment.bank_code}
+                                        </div>
+                                    </div>
+                                    <div className={`flex row item-center gap-20 pb-1 mb-1 border bottom`}>
+                                        <div className="text flex grow-1">Nomor Rekening</div>
+                                        <div className="text bold">
+                                            {payment.account_number}
+                                        </div>
+                                    </div>
+                                    <div className={`flex row item-center gap-20 pb-1 mb-1 border bottom`}>
+                                        <div className="text flex grow-1">Atas Nama</div>
+                                        <div className="text bold">
+                                            {payment.name}
+                                        </div>
+                                    </div>
+                                    <div className={`flex row item-center gap-20 pb-1 mb-1 border bottom`}>
+                                        <div className="text flex grow-1">Jumlah Pembayaran</div>
+                                        <div className="text bold">
+                                            {Currency(payment.expected_amount).encode()}
+                                        </div>
+                                    </div>
+                                </>
+                            }
+                        </>
+                    }
+                </Popup>
+            }
+            {
+                isViewingReview &&
+                <Popup onDismiss={() => setViewingReview(false)}>
+                    <div className="flex row item-center">
+                        <h3 className="m-0 text bold size-16 flex grow-1">Ulasan Saya untuk {product.name}</h3>
+                        <div className="h-40 flex row item-center gap-5">
+                            <FaStar size={20} color={config.colors.yellow} />
+                            <div className="text size-20 bold">
+                                {product.review.rate}
+                            </div>
+                            <div className="text size-14">/ 5</div>
+                        </div>
+                    </div>
+
+                    <div className="text size-12 muted mb-1 mt-2">Saya mengatakan</div>
+                    <div>{product.review.body}</div>
+
+                    <div className="text center mt-3 muted size-16 pointer" onClick={() => setViewingReview(false)}>tutup</div>
+                </Popup>
+            }
+            {
+                isWritingReview &&
+                <Popup onDismiss={() => setWritingReview(false)}>
+                    <div className="flex row item-center">
+                        <h3 className="m-0 text bold size-16 flex grow-1">Tulis Ulasan untuk {product.name}</h3>
+                        <div className="h-40 ratio-1-1 rounded-max border flex centerize pointer" onClick={() => setWritingReview(false)}>
+                            <BiX />
+                        </div>
+                    </div>
+
+                    <div className="flex row item-center gap-10 mt-2">
+                        {
+                            starMax.map((star, s) => (
+                                <div className="pointer" onClick={() => setRate(s + 1)}>
+                                    {
+                                        ((s + 1) > rate) ?
+                                        <BiStar size={20} color={config.colors.yellow} />
+                                        :
+                                        <FaStar size={20} color={config.colors.yellow} />
+                                    }
+                                </div>
+                            ))
+                        }
+                    </div>
+
+                    <div className="group">
+                        <textarea name="body" id="body" onInput={e => setReviewBody(e.currentTarget.value)}></textarea>
+                        <label htmlFor="body">Apa pendapatmu tentang produk ini?</label>
+                    </div>
+
+                    <button className="w-100 mt-3 primary" style={{
+                        backgroundColor: user.accent_color,
+                        opacity: rate !== null ? 1 : 0.4,
+                        cursor: rate !== null ? 'pointer' : 'not-allowed'
+                    }} onClick={() => {
+                        if (rate !== null) {
+                            submitReview();
+                        }
+                    }}>Beri Ulasan</button>
+                </Popup>
+            }
+        </>
+}
+
+export default CustomerOrderDetail;

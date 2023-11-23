@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { BiChevronUp, BiChevronDown } from "react-icons/bi";
 import styles from "./styles/FAQ.module.css";
 import { MdExpandLess, MdExpandMore } from "react-icons/md";
 import config from "../config";

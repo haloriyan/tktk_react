@@ -8,18 +8,23 @@ import config from "../config";
 import Header from "../Partials/Header";
 import LoadingScreen from "../Partials/LoadingScreen";
 import Currency from "../components/Currency";
-import { BiLeftArrow } from "react-icons/bi";
 import { MdWest } from "react-icons/md";
 import Popup from "../components/Popup";
 import Alert from "../components/Alert";
 import GoogleFonts from "../components/GoogleFonts";
+import Initial from "../components/Initial";
+import { FaStar } from "react-icons/fa";
+import { BiStar } from "react-icons/bi";
 
 const Product = () => {
     const { username, slug } = useParams();
     const navigate = useNavigate();
+    const star_counter = [1,1,1,1,1];
     const [isLoading, setLoading] = useState(true);
     const [isLoadingUser, setLoadingUser] = useState(true);
+    const [isLoadingReview, setLoadingReview] = useState(true);
     const [product, setProduct] = useState(null);
+    const [reviews, setReviews] = useState([]);
     const [imageIndex, setImageIndex] = useState(0);
     const [viewingImage, setViewingImage] = useState(null);
     const [user, setUser] = useState(null);
@@ -39,9 +44,21 @@ const Product = () => {
                 let res = response.data;
                 setProduct(res.product);
                 setUser(res.user);
+                document.title = `${res.product.name} - ${res.user.name}`
             })
         }
     }, [isLoading, customer]);
+
+    useEffect(() => {
+        if (isLoadingReview && product !== null) {
+            setLoadingReview(false);
+            axios.get(`${config.baseUrl}/api/product/${product.id}/review`)
+            .then(response => {
+                let res = response.data;
+                setReviews(res.reviews);
+            })
+        }
+    }, [isLoadingReview, product]);
 
     useEffect(() => {
         if (user === null && isLoadingUser) {
@@ -57,7 +74,6 @@ const Product = () => {
     useEffect(() => {
         if ((customer === null && customer !== 'loading') && user !== null) {
             let customerData = JSON.parse(window.localStorage.getItem(`customer_data_${user.id}`));
-            console.log(customerData);
             if (customerData === null) {
                 setCustomer('unauthorized')
             } else {
@@ -135,6 +151,45 @@ const Product = () => {
                 <div className="inner_content">
                     <div className="text small muted mt-3">Deskripsi</div>
                     <div>{product.description}</div>
+
+                    {
+                        reviews.length > 0 &&
+                        <>
+                            <h4 className="text size-20 bold">Apa kata orang-orang?</h4>
+                            <div className="flex column grow-1 gap-20">
+                            {
+                                reviews.map((review, r) => (
+                                    <div className="bg-white rounded p-2 border">
+                                        <div className="flex row gap-20">
+                                            <Initial name={review.customer.name} />
+                                            <div className="flex column grow-1">
+                                                <div className="text size-14 bold">{review.customer.name}</div>
+                                                <div className="flex row item-center gap-5 mt-05">
+                                                    {
+                                                        star_counter.map((star, s) => (
+                                                            <>
+                                                                {
+                                                                    ((s + 1) > review.rate) ?
+                                                                    <BiStar size={20} color={config.colors.grey} />
+                                                                    :
+                                                                    <FaStar size={20} color={config.colors.yellow} />
+                                                                }
+                                                            </>
+                                                        ))
+                                                    }
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div className="mt-2">
+                                            {review.body}
+                                        </div>
+                                    </div>
+                                ))
+                            }
+                            </div>
+                        </>
+                    }
                 </div>
             </div>
             <Header accent_color={user === null ? null : user.accent_color}>

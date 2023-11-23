@@ -6,7 +6,6 @@ import CustomerOtp from "./CustomerOtp";
 import { BiCopyright, BiShoppingBag, BiUser } from "react-icons/bi";
 import axios from "axios";
 import config from "../config";
-import { MdAbc } from "react-icons/md";
 import GoogleFonts from "../components/GoogleFonts";
 import Initial from "../components/Initial";
 import moment from "moment";
@@ -22,11 +21,10 @@ const Customer = () => {
             .then(response => {
                 let res = response.data;
                 let usr = JSON.parse(JSON.stringify(res.user));
-                console.log(usr);
                 setUser(usr);
             })
         }
-    }, [customer, user]);
+    }, [customer, user, username]);
 
     useEffect(() => {
         if (customer === null && user !== null) {

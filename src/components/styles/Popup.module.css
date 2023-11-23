@@ -21,6 +21,6 @@
 
 @media (max-width: 480px) {
     .modal_body {
-        width: 90%;
+        width: 90% !important;
     }
 }

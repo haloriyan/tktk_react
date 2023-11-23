@@ -12,6 +12,10 @@ import PageRouter from "../Page";
 import Currency from "../components/Currency";
 import { BiCartAdd, BiPlug, BiPlus, BiShow } from "react-icons/bi";
 import GoogleFonts from "../components/GoogleFonts";
+import ShowAll from "./HomeLayout/ShowAll";
+import LinkOnly from "./HomeLayout/LinkOnly";
+import TabProduct from "./HomeLayout/TabProduct";
+import TabLink from "./HomeLayout/TabLink";
 
 const Home = () => {
     const pages = ['pricing','about','faq','terms','contact','privacy'];
@@ -21,6 +25,7 @@ const Home = () => {
     const [isLoading, setLoading] = useState(true);
     const [user, setUser] = useState(null);
     const [isLoadingProduct, setLoadingProduct] = useState(false);
+    const [categories, setCategories] = useState([]);
     const [products, setProducts] = useState([]);
     const [links, setLinks] = useState([]);
     const [customer, setCustomer] = useState(null);
@@ -68,6 +73,7 @@ const Home = () => {
                 let prods = res.products;
                 // setUser(res.user);
                 setProducts(prods);
+                setCategories(res.categories);
                 prods.map(prod => {
                     if (prod.is_service) {
                         setHasService(true);
@@ -132,6 +138,17 @@ const Home = () => {
         }
     }, [message]);
 
+    const clickLink = link => {
+        axios.post(`${config.baseUrl}/api/user/link/hit`, {
+            token: customer.token,
+            link_id: link.id
+        })
+        .then(response => {
+            let res = response.data;
+            window.open(link.url, '_blank');
+        })
+    }
+
     if (InArray(username, pages)) {
         return PageRouter
     } else {
@@ -181,114 +198,21 @@ const Home = () => {
                     </div>
 
                     {
-                        hasLink &&
-                        <div className="flex column gap-10 mt-3">
-                            {
-                                links.map((lnk, l) => (
-                                    <a href="#" key={l} className="flex row item-center gap-20 bg-white p-15 rounded border">
-                                        {
-                                            lnk.image !== null &&
-                                            <img 
-                                                src={`${config.baseUrl}/storage/link_images/${lnk.image}`} alt={lnk.title} 
-                                                className="h-60 ratio-1-1 rounded bg-grey cover"
-                                            />
-                                        }
-                                        <div className="flex grow-1 text bold" style={{color: user.accent_color}}>{lnk.title}</div>
-                                    </a>
-                                ))
-                            }
-                        </div>
+                        user.home_layout === 'show_all' &&
+                        <ShowAll links={links} actions={{clickLink, addToCart}} user={user} products={products}  message={message} categories={categories} />
                     }
-                    
-                    <div className="flex row item-center gap-10 mt-2 justify-end">
-                        {
-                            hasProduct &&
-                            <div className="flex row p-1 pl-3 pr-3 rounded-max pointer text size-12" onClick={() => setViewing('product')} style={{
-                                backgroundColor: viewing === 'product' ? user.accent_color : `${user.accent_color}30`,
-                                color: viewing === 'product' ? '#fff' : user.accent_color
-                            }}>
-                                Produk
-                            </div>
-                        }
-                        {
-                            hasService &&
-                            <div className="flex row p-1 pl-3 pr-3 rounded-max pointer text size-12" onClick={() => setViewing('service')} style={{
-                                backgroundColor: viewing === 'service' ? user.accent_color : `${user.accent_color}30`,
-                                color: viewing === 'service' ? '#fff' : user.accent_color
-                            }}>
-                                Jasa
-                            </div>
-                        }
-                    </div>
-
-                    <div className="flex row wrap gap-20 mt-3 inner_content">
-                        {
-                            viewing === 'product' &&
-                            products.map((product, p) => {
-                                if (!product.is_service) return (
-                                    <div key={p} className={`${styles.ProductBox} bg-white rounded flex column basis-2 grow-1 text black relative`} style={{
-                                        borderBottomColor: `${user.accent_color}30`
-                                    }}>
-                                        <a href={`/${username}/product/${product.slug}`}>
-                                            <img 
-                                                src={`${config.baseUrl}/storage/u${user.id}/product_images/${product.images[0].filename}`} 
-                                                alt={product.name} 
-                                                className={`${styles.ProductImage} cover`}
-                                            />
-                                        </a>
-                                        <div className="p-2 flex row item-center gap-10">
-                                            <a href={`/${username}/product/${product.slug}`} className="flex column grow-1">
-                                                <div className="text bold small black">{product.name}</div>
-                                                <div className="text small mt-05" style={{color: user !== null ? user.accent_color : config.primaryColor}}>
-                                                    {Currency(product.price).encode()}
-                                                </div>
-                                            </a>
-                                            <div className="h-40 ratio-1-1 rounded-max flex centerize pointer" style={{backgroundColor: user !== null ? user.accent_color : config.primaryColor}} onClick={() => addToCart(product.id, p)}>
-                                                <BiCartAdd color="#fff" />
-                                            </div>
-                                        </div>
-
-                                        {
-                                            (message !== null && message.index === p) &&
-                                            <div className="bg-green rounded p-1 pl-2 pr-2 m-1 mt-2 text size-12 absolute">
-                                                {message.body}
-                                            </div>
-                                        }
-                                    </div>
-                                )
-                            })
-                        }
-                    </div>
-
-                    <div className="flex column gap-20 inner_content">
                     {
-                        viewing === 'service' &&
-                            products.map((product, p) => {
-                                if (product.is_service) return (
-                                    <a href={`/${username}/service/${product.slug}`} className="mb-2 flex row item-center" style={{
-                                        borderBottom: `8px solid ${user.accent_color}30`
-                                    }} key={p}>
-                                        <img 
-                                            src={`${config.baseUrl}/storage/u${user.id}/product_images/${product.images[0].filename}`} 
-                                            alt={product.name} 
-                                            className={`${styles.ServiceImage} cover`}
-                                        />
-                                        <div className="flex column grow-1 ml-2">
-                                            <div className="text bold">{product.name}</div>
-                                            <div className="text small">{product.description}</div>
-                                            <div className="flex row item-center gap-10 mt-2">
-                                                <div className="flex grow-1 text small" style={{color: user !== null ? user.accent_color : config.primaryColor}}>{Currency(product.price).encode()}</div>
-                                                <button className="small text white flex row item-center" style={{backgroundColor: user !== null ? user.accent_color : config.primaryColor}}>
-                                                    <BiShow color="#fff" />
-                                                    <div className="ml-1">Detail</div>
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </a>
-                                )
-                            })
-                        }
-                    </div>
+                        user.home_layout === 'link_only' &&
+                        <LinkOnly links={links} actions={{clickLink, addToCart}} user={user} products={products}  message={message} categories={categories} />
+                    }
+                    {
+                        user.home_layout === 'tab-product_first' &&
+                        <TabProduct user={user} products={products} actions={{addToCart, clickLink}} message={message} links={links} categories={categories} />
+                    }
+                    {
+                        user.home_layout === 'tab-link_first' &&
+                        <TabLink user={user} products={products} actions={{addToCart, clickLink}} message={message} links={links} categories={categories} />
+                    }
 
                     <div className="h-100"></div>
                 </div>
